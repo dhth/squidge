@@ -20,7 +20,7 @@ cargo install --git https://github.com/dhth/squidge.git
 ### Help
 
 ```text
-squidge delimited data
+squidge shortens delimited data
 
 Usage: squidge [OPTIONS]
 

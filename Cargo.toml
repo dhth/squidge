@@ -2,6 +2,9 @@
 name = "squidge"
 version = "0.1.0"
 edition = "2021"
+description = "A crate for shortening delimited data"
+repository = "https://github.com/dhth/squidge"
+license = "MIT"
 
 [dependencies]
 clap = { version = "4.5.18", features = ["derive"] }
