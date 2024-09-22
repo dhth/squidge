@@ -1,0 +1,44 @@
+name: build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    paths:
+      - "Cargo.*"
+      - "**/*.rs"
+      - ".github/workflows/*.yml"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build
+        run: cargo build --verbose
+      - name: Test
+        run: cargo test --verbose
+
+  run:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install
+        run: cargo install --quiet --path .
+      - name: Run
+        run: |
+          cat examples/paths.txt | squidge -f 1 -l 2 -r 'billing|utils'
