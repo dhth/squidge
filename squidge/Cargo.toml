@@ -1,11 +1,19 @@
 [package]
 name = "squidge"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
+authors = ["Dhruv Thakur"]
 repository = "https://github.com/dhth/squidge"
 description = "squidge shortens delimited data"
 homepage = "https://github.com/dhth/squidge"
 license = "MIT"
+keywords = [
+    "delimited",
+    "shortener",
+]
+categories = [
+    "text-processing"
+]
 
 [dependencies]
 regex = "1.10.6"
