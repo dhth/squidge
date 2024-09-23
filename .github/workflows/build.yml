@@ -41,4 +41,4 @@ jobs:
         run: cargo install --quiet --path sqdj
       - name: Run
         run: |
-          cat examples/paths.txt | sqdj -f 1 -l 2 -r 'billing|utils'
+          cat sqdj/src/assets/example-paths.txt | sqdj -f 1 -l 2 -r 'billing|utils'

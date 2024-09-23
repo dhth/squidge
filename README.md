@@ -5,8 +5,6 @@
 
 `squidge` shortens delimited data.
 
-Here's a quick example showing its usage:
-
 ```rust
 use squidge::{Config, shorten_line};
 
@@ -59,11 +57,12 @@ sqdj shortens delimited data
 Usage: sqdj [OPTIONS]
 
 Options:
-  -d, --delimiter <STRING>       Delimiter [default: /]
-  -r, --ignore-regex <STRING>    Regex for ignoring elements (ie, they won't be shortened)
-  -f, --ignore-first-n <NUMBER>  Ignore first n elements [default: 0]
-  -l, --ignore-last-n <NUMBER>   Ignore last n elements [default: 1]
-  -h, --help                     Print help
+  -d, --delimiter <STRING>         Delimiter [default: /]
+  -r, --ignore-regex <STRING>      Regex for ignoring elements (ie, they won't be shortened)
+  -f, --ignore-first-n <NUMBER>    Ignore first n elements [default: 0]
+  -l, --ignore-last-n <NUMBER>     Ignore last n elements [default: 1]
+      --output-delimiter <STRING>  Output delimiter [default: /]
+  -h, --help                       Print help
 ```
 
 ```bash
