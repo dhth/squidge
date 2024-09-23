@@ -5,6 +5,20 @@ members = [
 ]
 resolver = "2"
 
+[workspace.package]
+version = "0.2.1"
+edition = "2021"
+authors = ["Dhruv Thakur"]
+repository = "https://github.com/dhth/squidge"
+homepage = "https://github.com/dhth/squidge"
+license-file = "LICENSE"
+exclude = [
+    ".github",
+]
+
+[workspace.dependencies]
+regex = "1.10.6"
+
 # Config for 'cargo dist'
 [workspace.metadata.dist]
 # The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
@@ -21,6 +35,9 @@ tap = "dhth/homebrew-tap"
 install-path = "CARGO_HOME"
 # Publish jobs to run in CI
 publish-jobs = ["homebrew"]
+# Custom jobs to run after the "announce" phase
+# https://opensource.axo.dev/cargo-dist/book/reference/config.html#post-announce-jobs
+post-announce-jobs = ["./release-packages"]
 # Whether to install an updater program
 install-updater = false
 # Whether to enable GitHub Attestations

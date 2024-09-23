@@ -1,12 +1,12 @@
 [package]
 name = "squidge"
-version = "0.2.1"
-edition = "2021"
-authors = ["Dhruv Thakur"]
-repository = "https://github.com/dhth/squidge"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license-file.workspace = true
 description = "squidge shortens delimited data"
-homepage = "https://github.com/dhth/squidge"
-license = "MIT"
 keywords = [
     "delimited",
     "shortener",
@@ -16,4 +16,4 @@ categories = [
 ]
 
 [dependencies]
-regex = "1.10.6"
+regex.workspace = true
