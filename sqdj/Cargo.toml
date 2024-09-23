@@ -5,7 +5,7 @@ authors.workspace = true
 edition.workspace = true
 homepage.workspace = true
 repository.workspace = true
-license-file.workspace = true
+license.workspace = true
 description = "sqdj shortens delimited data"
 keywords = [
     "cli",

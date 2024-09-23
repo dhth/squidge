@@ -6,12 +6,12 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.2.2"
+version = "0.2.3"
 edition = "2021"
 authors = ["Dhruv Thakur"]
 repository = "https://github.com/dhth/squidge"
 homepage = "https://github.com/dhth/squidge"
-license-file = "LICENSE"
+license = "MIT"
 exclude = [
     ".github",
 ]
