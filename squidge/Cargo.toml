@@ -1,0 +1,11 @@
+[package]
+name = "squidge"
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/dhth/squidge"
+description = "squidge shortens delimited data"
+homepage = "https://github.com/dhth/squidge"
+license = "MIT"
+
+[dependencies]
+regex = "1.10.6"

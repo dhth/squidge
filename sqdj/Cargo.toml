@@ -1,0 +1,13 @@
+[package]
+name = "sqdj"
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/dhth/squidge"
+description = "sqdj shortens delimited data"
+homepage = "https://github.com/dhth/squidge"
+license = "MIT"
+
+[dependencies]
+squidge = { path = "../squidge" }
+clap = { version = "4.5.18", features = ["derive"] }
+regex = "1.10.6"

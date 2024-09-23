@@ -8,7 +8,7 @@ const DEFAULT_DELIMITER: &str = "/";
 const DEFAULT_IGNORE_FIRST_N: usize = 0;
 const DEFAULT_IGNORE_LAST_N: usize = 1;
 
-/// squidge shortens delimited data
+/// sqdj shortens delimited data
 #[derive(Parser, Debug)]
 #[command(about, long_about=None)]
 struct Args {
@@ -16,7 +16,7 @@ struct Args {
     #[arg(short = 'd', long = "delimiter", value_name = "STRING")]
     #[clap(default_value = DEFAULT_DELIMITER)]
     delimiter: String,
-    /// Regex for ignoring elements (ie, they won't be squidged)
+    /// Regex for ignoring elements (ie, they won't be shortened)
     #[arg(short = 'r', long = "ignore-regex", value_name = "STRING")]
     ignore_regex: Option<String>,
     /// Ignore first n elements
