@@ -17,7 +17,7 @@ exclude = [
 ]
 
 [workspace.dependencies]
-regex = "1.11.0"
+regex = "1.11.1"
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
