@@ -19,9 +19,9 @@ categories = [
 
 [dependencies]
 anyhow.workspace = true
-squidge = { version = "0.2.3", path = "../squidge" }
-clap = { version = "4.5.18", features = ["derive"] }
+clap = { version = "4.5.23", features = ["derive"] }
 regex.workspace = true
+squidge = { version = "0.2.3", path = "../squidge" }
 
 [dev-dependencies]
 assert_cmd = "2.0.16"

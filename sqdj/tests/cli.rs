@@ -12,7 +12,7 @@ fn shows_help() {
     // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    assert!(stdout.contains("sqdj shortens delimited data"));
+    assert!(stdout.contains("sqdj (short for squidge) shortens delimited data"));
 }
 
 #[test]
