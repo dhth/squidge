@@ -65,9 +65,11 @@ Usage: sqdj [OPTIONS]
 Options:
   -d, --delimiter <STRING>         Delimiter [default: /]
   -r, --ignore-regex <STRING>      Regex for ignoring elements (ie, they won't be shortened)
+  -p, --input-path <STRING>        Input file
   -f, --ignore-first-n <NUMBER>    Ignore first n elements [default: 0]
   -l, --ignore-last-n <NUMBER>     Ignore last n elements [default: 1]
-      --output-delimiter <STRING>  Output delimiter [default: /]
+  -o, --output-delimiter <STRING>  Output delimiter [default: /]
+  -s, --use-stdin                  Read input from stdin
   -h, --help                       Print help
 ```
 

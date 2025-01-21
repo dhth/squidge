@@ -6,7 +6,7 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.2.3"
+version = "0.2.4"
 edition = "2021"
 authors = ["Dhruv Thakur"]
 repository = "https://github.com/dhth/squidge"
@@ -17,6 +17,7 @@ exclude = [
 ]
 
 [workspace.dependencies]
+anyhow = "1.0.94"
 regex = "1.11.0"
 
 # Config for 'cargo dist'
