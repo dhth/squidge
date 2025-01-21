@@ -17,8 +17,8 @@ exclude = [
 ]
 
 [workspace.dependencies]
-anyhow = "1.0.94"
-regex = "1.11.0"
+anyhow = "1.0.95"
+regex = "1.11.1"
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
