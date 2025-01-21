@@ -42,7 +42,7 @@ pub struct Config<'a> {
     pub ignore_regex: Option<Regex>,
 }
 
-impl<'a> Default for Config<'a> {
+impl Default for Config<'_> {
     fn default() -> Self {
         Config {
             delimiter: "/",

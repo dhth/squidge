@@ -1,8 +1,9 @@
+use anyhow::Context;
 use clap::Parser;
 use regex::Regex;
 use squidge::{shorten_line, Config};
-use std::io::{self, BufRead};
-use std::process;
+use std::fs::File;
+use std::io::{self, BufRead, BufReader};
 
 const DEFAULT_DELIMITER: &str = "/";
 const DEFAULT_IGNORE_FIRST_N: usize = 0;
@@ -18,6 +19,9 @@ struct Args {
     /// Regex for ignoring elements (ie, they won't be shortened)
     #[arg(short = 'r', long = "ignore-regex", value_name = "STRING")]
     ignore_regex: Option<String>,
+    /// Input file
+    #[arg(short = 'p', long = "input-path", value_name = "STRING")]
+    input_file_path: Option<String>,
     /// Ignore first n elements
     #[arg(short = 'f', long = "ignore-first-n", value_name = "NUMBER")]
     #[clap(default_value_t = DEFAULT_IGNORE_FIRST_N)]
@@ -27,20 +31,21 @@ struct Args {
     #[clap(default_value_t = DEFAULT_IGNORE_LAST_N)]
     ignore_last_n: usize,
     /// Output delimiter
-    #[arg(long = "output-delimiter", value_name = "STRING")]
+    #[arg(short = 'o', long = "output-delimiter", value_name = "STRING")]
     #[clap(default_value = DEFAULT_DELIMITER)]
     output_delimiter: String,
+    /// Read input from stdin
+    #[arg(short = 's', long = "use-stdin", value_name = "BOOLEAN")]
+    use_stdin: bool,
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
-    let re = args.ignore_regex.map(|r| {
-        Regex::new(&r).unwrap_or_else(|err| {
-            eprintln!("Error: couldn't compile regex: {}", err);
-            process::exit(1);
-        })
-    });
+    let re = args
+        .ignore_regex
+        .map(|r| Regex::new(&r).context("couldn't compile regex"))
+        .transpose()?;
 
     let cfg = Config {
         delimiter: &args.delimiter,
@@ -49,20 +54,46 @@ fn main() {
         ignore_regex: re,
     };
 
-    let mut lines = vec![];
+    let lines = match (args.use_stdin, args.input_file_path) {
+        (false, None) => {
+            return Err(anyhow::anyhow!(
+                "a source needs to be provided (either a file or stdin)"
+            ));
+        }
+        (true, Some(_)) => {
+            return Err(anyhow::anyhow!(
+                "only one source (either a file or stdin) can be used at a time"
+            ));
+        }
+        (true, None) => {
+            let stdin = io::stdin();
+            let mut lines = vec![];
+            for line in stdin.lock().lines() {
+                let line = line.context("couldn't read line from stdin")?;
+                lines.push(line);
+            }
+            lines
+        }
+        (false, Some(path)) => {
+            let file = File::open(path)?;
+            let reader = BufReader::new(file);
 
-    let stdin = io::stdin();
-    for line in stdin.lock().lines() {
-        let line = line.unwrap_or_else(|err| {
-            eprintln!("Error: couldn't read line from stdin: {}", err);
-            process::exit(1);
-        });
-        lines.push(line);
+            reader
+                .lines()
+                .map(|line| line.context("couldn't read line from file"))
+                .collect::<Result<_, _>>()?
+        }
+    };
+
+    if lines.is_empty() {
+        return Err(anyhow::anyhow!("nothing to shorten"));
     }
 
     let shortened_lines = get_shortened_lines(&cfg, &lines, &args.output_delimiter);
 
     println!("{}", shortened_lines.join("\n"));
+
+    Ok(())
 }
 
 fn get_shortened_lines(cfg: &Config, lines: &[String], output_delimiter: &str) -> Vec<String> {
