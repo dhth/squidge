@@ -1,7 +1,7 @@
 use anyhow::Context;
 use clap::Parser;
 use regex::Regex;
-use squidge::{shorten_line, Config};
+use squidge::{Config, shorten_line};
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
