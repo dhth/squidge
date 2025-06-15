@@ -2,8 +2,8 @@
   <h1 align="center">squidge</h1>
   <p align="center">
     <a href="https://github.com/dhth/squidge/actions/workflows/main.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/dhth/squidge/main.yml?style=flat-square"></a>
-    <a href="https://crates.io/crates/squidge"><img alt="crates.io" src="https://img.shields.io/crates/v/squidge?style=flat-square"></a>
-    <a href="https://crates.io/crates/sqdj"><img alt="crates.io" src="https://img.shields.io/crates/v/sqdj?style=flat-square"></a>
+    <a href="https://crates.io/crates/squidge"><img alt="crates.io" src="https://img.shields.io/crates/v/squidge?style=flat-square&label=squidge%40crates.io"></a>
+    <a href="https://crates.io/crates/sqdj"><img alt="crates.io" src="https://img.shields.io/crates/v/sqdj?style=flat-square&label=sqdj%40crates.io"></a>
     <a href="https://github.com/dhth/squidge/releases/latest"><img alt="Latest Release" src="https://img.shields.io/github/release/dhth/squidge.svg?style=flat-square"></a>
     <a href="https://github.com/dhth/squidge/releases"><img alt="Commits Since Latest Release" src="https://img.shields.io/github/commits-since/dhth/squidge/latest?style=flat-square"></a>
   </p>
