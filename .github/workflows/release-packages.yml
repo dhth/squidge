@@ -19,5 +19,5 @@ jobs:
         env:
           CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
         run: |
-          cargo publish -p squidge --token ${CRATES_TOKEN}
-          cargo publish -p sqdj --token ${CRATES_TOKEN}
+          cargo publish -p squidge --token "${CRATES_TOKEN}"
+          cargo publish -p sqdj --token "${CRATES_TOKEN}"
