@@ -15,6 +15,7 @@ jobs:
       contents: read
     outputs:
       code: ${{ steps.filter.outputs.code }}
+      deps: ${{ steps.filter.outputs.deps }}
       release: ${{ steps.filter.outputs.release }}
       workflows: ${{ steps.filter.outputs.workflows }}
       yml: ${{ steps.filter.outputs.yml }}
@@ -33,6 +34,11 @@ jobs:
               - clippy.toml
               - rust-toolchain.toml
               - ".github/workflows/main.yml"
+            deps:
+              - "Cargo.toml"
+              - "Cargo.lock"
+              - "deny.toml"
+              - ".github/workflows/pr.yml"
             release:
               - dist-workspace.toml
               - ".github/workflows/release.yml"
@@ -117,3 +123,12 @@ jobs:
         run: |
           cargo publish -p squidge --dry-run
           cargo publish -p sqdj --dry-run
+
+  audit:
+    needs: changes
+    if: ${{ needs.changes.outputs.deps == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: dhth/composite-actions/.github/actions/cargo-deny@main
