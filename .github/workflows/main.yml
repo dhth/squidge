@@ -38,7 +38,7 @@ jobs:
               - "Cargo.toml"
               - "Cargo.lock"
               - "deny.toml"
-              - ".github/workflows/pr.yml"
+              - ".github/workflows/main.yml"
             release:
               - dist-workspace.toml
               - ".github/workflows/release.yml"
