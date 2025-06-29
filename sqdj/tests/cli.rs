@@ -139,7 +139,7 @@ fn fails_if_no_source_is_provided() {
     // THEN
     if output.status.success() {
         let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
+        println!("stdout: \n{stdout}");
     }
     assert!(!output.status.success());
 }
@@ -156,7 +156,7 @@ fn fails_if_more_than_one_source_is_provided() {
     // THEN
     if output.status.success() {
         let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
+        println!("stdout: \n{stdout}");
     }
     assert!(!output.status.success());
 }
@@ -172,7 +172,7 @@ fn fails_if_input_file_is_non_existent() {
     // THEN
     if output.status.success() {
         let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
+        println!("stdout: \n{stdout}");
     }
     assert!(!output.status.success());
     let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
@@ -190,7 +190,7 @@ fn fails_if_input_file_is_empty() {
     // THEN
     if output.status.success() {
         let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
+        println!("stdout: \n{stdout}");
     }
     assert!(!output.status.success());
     let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
@@ -209,7 +209,7 @@ fn fails_if_ignore_regex_is_incorrect() {
     // THEN
     if output.status.success() {
         let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
+        println!("stdout: \n{stdout}");
     }
     assert!(!output.status.success());
     let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
@@ -228,7 +228,7 @@ fn fails_if_ignore_first_n_is_not_a_number() {
     // THEN
     if output.status.success() {
         let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
+        println!("stdout: \n{stdout}");
     }
     assert!(!output.status.success());
 }
@@ -245,7 +245,7 @@ fn fails_if_ignore_last_n_is_not_a_number() {
     // THEN
     if output.status.success() {
         let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
+        println!("stdout: \n{stdout}");
     }
     assert!(!output.status.success());
 }
