@@ -128,7 +128,6 @@ jobs:
       - name: Dry run publish packages
         run: |
           cargo publish -p squidge --dry-run
-          cargo publish -p sqdj --dry-run
 
   audit:
     needs: changes
