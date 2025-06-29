@@ -21,6 +21,8 @@ categories = [
 anyhow.workspace = true
 clap = { version = "4.5.40", features = ["derive"] }
 regex.workspace = true
-squidge = { path = "../squidge" }
+squidge = { version = "0.2.4", path = "../squidge" }
+
+[dev-dependencies]
 insta = "1.43.1"
 insta-cmd = "0.6.0"
