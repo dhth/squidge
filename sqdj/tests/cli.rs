@@ -1,131 +1,184 @@
-use assert_cmd::Command;
+use insta_cmd::{assert_cmd_snapshot, get_cargo_bin};
+use std::process::Command;
+
+fn base_command() -> Command {
+    Command::new(get_cargo_bin("sqdj"))
+}
 
 // SUCCESSES
 #[test]
 fn shows_help() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
+    let mut cmd = base_command();
     cmd.arg("--help");
-    let output = cmd.output().expect("running command failed");
 
     // THEN
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    assert!(stdout.contains("sqdj (short for squidge) shortens delimited data"));
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    sqdj (short for squidge) shortens delimited data
+
+    Usage: sqdj [OPTIONS]
+
+    Options:
+      -d, --delimiter <STRING>         Delimiter [default: /]
+      -r, --ignore-regex <STRING>      Regex for ignoring elements (ie, they won't be shortened)
+      -p, --input-path <STRING>        Input file
+      -f, --ignore-first-n <NUMBER>    Ignore first n elements [default: 0]
+      -l, --ignore-last-n <NUMBER>     Ignore last n elements [default: 1]
+      -o, --output-delimiter <STRING>  Output delimiter [default: /]
+      -s, --use-stdin                  Read input from stdin
+      -h, --help                       Print help
+
+    ----- stderr -----
+    ");
 }
 
 #[test]
 fn works_for_input_file() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args(["--input-path", "tests/data/input-1.txt"]);
 
     // THEN
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    let expected = r#"s/m/s/a/b/ApplicationComponents.scala
-s/m/s/a/b/Components.scala
-s/m/s/a/b/Server.scala
-"#;
-    assert_eq!(stdout, expected);
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    s/m/s/a/b/ApplicationComponents.scala
+    s/m/s/a/b/Components.scala
+    s/m/s/a/b/Server.scala
+
+    ----- stderr -----
+    ");
 }
 
 #[test]
 fn works_for_non_default_delimiter() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-2.txt");
-    cmd.arg("-d=::");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args([
+        "--input-path",
+        "tests/data/input-2.txt",
+        "--delimiter",
+        "::",
+    ]);
 
     // THEN
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    let expected = r#"s/m/s/a/b/ApplicationComponents.scala
-s/m/s/a/b/Components.scala
-s/m/s/a/b/Server.scala
-"#;
-    assert_eq!(stdout, expected);
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    s/m/s/a/b/ApplicationComponents.scala
+    s/m/s/a/b/Components.scala
+    s/m/s/a/b/Server.scala
+
+    ----- stderr -----
+    ");
 }
 
 #[test]
 fn handles_ignore_regex_correctly() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-r=(?:scala|billing)");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--ignore-regex",
+        "(?:scala|billing)",
+    ]);
 
     // THEN
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    let expected = r#"s/m/scala/a/billing/ApplicationComponents.scala
-s/m/scala/a/billing/Components.scala
-s/m/scala/a/billing/Server.scala
-"#;
-    assert_eq!(stdout, expected);
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    s/m/scala/a/billing/ApplicationComponents.scala
+    s/m/scala/a/billing/Components.scala
+    s/m/scala/a/billing/Server.scala
+
+    ----- stderr -----
+    ");
 }
 
 #[test]
 fn handles_ignore_first_n_correctly() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-f=3");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--ignore-first-n",
+        "3",
+    ]);
 
     // THEN
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    let expected = r#"src/main/scala/a/b/ApplicationComponents.scala
-src/main/scala/a/b/Components.scala
-src/main/scala/a/b/Server.scala
-"#;
-    assert_eq!(stdout, expected);
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    src/main/scala/a/b/ApplicationComponents.scala
+    src/main/scala/a/b/Components.scala
+    src/main/scala/a/b/Server.scala
+
+    ----- stderr -----
+    ");
 }
 
 #[test]
 fn handles_ignore_last_n_correctly() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-l=2");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--ignore-last-n",
+        "2",
+    ]);
 
     // THEN
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    let expected = r#"s/m/s/a/billing/ApplicationComponents.scala
-s/m/s/a/billing/Components.scala
-s/m/s/a/billing/Server.scala
-"#;
-    assert_eq!(stdout, expected);
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    s/m/s/a/billing/ApplicationComponents.scala
+    s/m/s/a/billing/Components.scala
+    s/m/s/a/billing/Server.scala
+
+    ----- stderr -----
+    ");
 }
 
 #[test]
 fn uses_output_delimiter_correctly() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-o=::");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--output-delimiter",
+        "::",
+    ]);
 
     // THEN
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    let expected = r#"s::m::s::a::b::ApplicationComponents.scala
-s::m::s::a::b::Components.scala
-s::m::s::a::b::Server.scala
-"#;
-    assert_eq!(stdout, expected);
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    s::m::s::a::b::ApplicationComponents.scala
+    s::m::s::a::b::Components.scala
+    s::m::s::a::b::Server.scala
+
+    ----- stderr -----
+    ");
 }
 
 // FAILURES
@@ -133,119 +186,148 @@ s::m::s::a::b::Server.scala
 fn fails_if_no_source_is_provided() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
 
     // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{stdout}");
-    }
-    assert!(!output.status.success());
+    assert_cmd_snapshot!(cmd, @r"
+    success: false
+    exit_code: 1
+    ----- stdout -----
+
+    ----- stderr -----
+    Error: a source needs to be provided (either a file or stdin)
+    ");
 }
 
 #[test]
 fn fails_if_more_than_one_source_is_provided() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-s");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args(["--input-path", "tests/data/input-1.txt", "--use-stdin"]);
 
     // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{stdout}");
-    }
-    assert!(!output.status.success());
+    assert_cmd_snapshot!(cmd, @r"
+    success: false
+    exit_code: 1
+    ----- stdout -----
+
+    ----- stderr -----
+    Error: only one source (either a file or stdin) can be used at a time
+    ");
 }
 
 #[test]
 fn fails_if_input_file_is_non_existent() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/nonexistent.txt");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args(["--input-path", "tests/data/nonexistent.txt"]);
 
     // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{stdout}");
-    }
-    assert!(!output.status.success());
-    let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
-    assert!(stderr.contains("No such file or directory"));
+    assert_cmd_snapshot!(cmd, @r"
+    success: false
+    exit_code: 1
+    ----- stdout -----
+
+    ----- stderr -----
+    Error: No such file or directory (os error 2)
+    ");
 }
 
 #[test]
 fn fails_if_input_file_is_empty() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/empty.txt");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args(["--input-path", "tests/data/empty.txt"]);
 
     // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{stdout}");
-    }
-    assert!(!output.status.success());
-    let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
-    assert!(stderr.contains("nothing to shorten"));
+    assert_cmd_snapshot!(cmd, @r"
+    success: false
+    exit_code: 1
+    ----- stdout -----
+
+    ----- stderr -----
+    Error: nothing to shorten
+    ");
 }
 
 #[test]
 fn fails_if_ignore_regex_is_incorrect() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-r=(?:scala|billing");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--ignore-regex",
+        "(?:scala|billing",
+    ]);
 
     // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{stdout}");
-    }
-    assert!(!output.status.success());
-    let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
-    assert!(stderr.contains("couldn't compile regex"));
+    assert_cmd_snapshot!(cmd, @r"
+    success: false
+    exit_code: 1
+    ----- stdout -----
+
+    ----- stderr -----
+    Error: couldn't compile regex
+
+    Caused by:
+        regex parse error:
+            (?:scala|billing
+            ^
+        error: unclosed group
+    ");
 }
 
 #[test]
 fn fails_if_ignore_first_n_is_not_a_number() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-f=blah");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--ignore-first-n",
+        "blah",
+    ]);
 
     // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{stdout}");
-    }
-    assert!(!output.status.success());
+    assert_cmd_snapshot!(cmd, @r"
+    success: false
+    exit_code: 2
+    ----- stdout -----
+
+    ----- stderr -----
+    error: invalid value 'blah' for '--ignore-first-n <NUMBER>': invalid digit found in string
+
+    For more information, try '--help'.
+    ");
 }
 
 #[test]
 fn fails_if_ignore_last_n_is_not_a_number() {
     // GIVEN
     // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-l=blah");
-    let output = cmd.output().expect("running command failed");
+    let mut cmd = base_command();
+    cmd.args([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--ignore-last-n",
+        "blah",
+    ]);
 
     // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{stdout}");
-    }
-    assert!(!output.status.success());
+    assert_cmd_snapshot!(cmd, @r"
+    success: false
+    exit_code: 2
+    ----- stdout -----
+
+    ----- stderr -----
+    error: invalid value 'blah' for '--ignore-last-n <NUMBER>': invalid digit found in string
+
+    For more information, try '--help'.
+    ");
 }
