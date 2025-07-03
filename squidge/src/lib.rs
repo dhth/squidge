@@ -119,6 +119,7 @@ pub fn shorten_line(cfg: &Config, line: &str) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use insta::assert_yaml_snapshot;
 
     #[test]
     fn shorten_line_works_with_default_config() {
@@ -129,8 +130,12 @@ mod tests {
         let result = shorten_line(&Config::default(), line);
 
         // THEN
-        let expected = vec!["m", "s", "s", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r"
+        - m
+        - s
+        - s
+        - lib.rs
+        ");
     }
 
     #[test]
@@ -142,8 +147,13 @@ mod tests {
         let result = shorten_line(&Config::default(), line);
 
         // THEN
-        let expected = vec!["", "m", "s", "s", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r#"
+        - ""
+        - m
+        - s
+        - s
+        - lib.rs
+        "#);
     }
 
     #[test]
@@ -159,8 +169,12 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec!["m", "s", "s", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r"
+        - m
+        - s
+        - s
+        - lib.rs
+        ");
     }
 
     #[test]
@@ -177,8 +191,12 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec!["module", "submodule", "s", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r"
+        - module
+        - submodule
+        - s
+        - lib.rs
+        ");
     }
 
     #[test]
@@ -194,8 +212,12 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec!["m", "submodule", "service", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r"
+        - m
+        - submodule
+        - service
+        - lib.rs
+        ");
     }
 
     #[test]
@@ -211,8 +233,12 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec!["module", "submodule", "service", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r"
+        - module
+        - submodule
+        - service
+        - lib.rs
+        ");
     }
 
     #[test]
@@ -228,8 +254,12 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec!["module", "s", "s", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r"
+        - module
+        - s
+        - s
+        - lib.rs
+        ");
     }
 
     #[test]
@@ -245,8 +275,12 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec!["module", "submodule", "service", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r"
+        - module
+        - submodule
+        - service
+        - lib.rs
+        ");
     }
 
     #[test]
@@ -263,8 +297,12 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec!["module", "s", "service", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r"
+        - module
+        - s
+        - service
+        - lib.rs
+        ");
     }
 
     #[test]
@@ -274,8 +312,12 @@ mod tests {
         let result = shorten_line(&Config::default(), line);
 
         // WHEN
-        let expected = vec!["m", "", "s", "lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r#"
+        - m
+        - ""
+        - s
+        - lib.rs
+        "#);
     }
 
     #[test]
@@ -294,17 +336,16 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec![
-            "",
-            "path",
-            "t",
-            "a",
-            "module",
-            "submodule",
-            "service",
-            "lib.rs",
-        ];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r#"
+        - ""
+        - path
+        - t
+        - a
+        - module
+        - submodule
+        - service
+        - lib.rs
+        "#);
     }
 
     #[test]
@@ -320,8 +361,7 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec!["/path/to/a/module/submodule/service/lib.rs"];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @"- /path/to/a/module/submodule/service/lib.rs");
     }
 
     #[test]
@@ -337,10 +377,25 @@ mod tests {
         let result = shorten_line(&cfg, line);
 
         // THEN
-        let expected = vec![
-            "", "/", "p", "a", "t", "h", "/", "t", "o", "/", "l", "i", "b", ".", "r", "s", "",
-        ];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r#"
+        - ""
+        - /
+        - p
+        - a
+        - t
+        - h
+        - /
+        - t
+        - o
+        - /
+        - l
+        - i
+        - b
+        - "."
+        - r
+        - s
+        - ""
+        "#);
     }
 
     #[test]
@@ -352,7 +407,13 @@ mod tests {
         let result = shorten_line(&Config::default(), line);
 
         // THEN
-        let expected = vec!["", "", "", "", "", ""];
-        assert_eq!(result, expected);
+        assert_yaml_snapshot!(result, @r#"
+        - ""
+        - ""
+        - ""
+        - ""
+        - ""
+        - ""
+        "#);
     }
 }

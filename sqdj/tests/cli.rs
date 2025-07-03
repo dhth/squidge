@@ -1,17 +1,15 @@
-use insta_cmd::{assert_cmd_snapshot, get_cargo_bin};
-use std::process::Command;
+mod common;
 
-fn base_command() -> Command {
-    Command::new(get_cargo_bin("sqdj"))
-}
+use common::Fixture;
+use insta_cmd::assert_cmd_snapshot;
 
 // SUCCESSES
 #[test]
 fn shows_help() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.arg("--help");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--help"]);
 
     // THEN
     assert_cmd_snapshot!(cmd, @r"
@@ -40,8 +38,8 @@ fn shows_help() {
 fn works_for_input_file() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args(["--input-path", "tests/data/input-1.txt"]);
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-1.txt"]);
 
     // THEN
     assert_cmd_snapshot!(cmd, @r"
@@ -60,8 +58,8 @@ fn works_for_input_file() {
 fn works_for_non_default_delimiter() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args([
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
         "--input-path",
         "tests/data/input-2.txt",
         "--delimiter",
@@ -85,8 +83,8 @@ fn works_for_non_default_delimiter() {
 fn handles_ignore_regex_correctly() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args([
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
         "--input-path",
         "tests/data/input-1.txt",
         "--ignore-regex",
@@ -110,8 +108,8 @@ fn handles_ignore_regex_correctly() {
 fn handles_ignore_first_n_correctly() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args([
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
         "--input-path",
         "tests/data/input-1.txt",
         "--ignore-first-n",
@@ -135,8 +133,8 @@ fn handles_ignore_first_n_correctly() {
 fn handles_ignore_last_n_correctly() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args([
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
         "--input-path",
         "tests/data/input-1.txt",
         "--ignore-last-n",
@@ -160,8 +158,8 @@ fn handles_ignore_last_n_correctly() {
 fn uses_output_delimiter_correctly() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args([
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
         "--input-path",
         "tests/data/input-1.txt",
         "--output-delimiter",
@@ -186,7 +184,8 @@ fn uses_output_delimiter_correctly() {
 fn fails_if_no_source_is_provided() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
+    let fx = Fixture::new();
+    let mut cmd = fx.base_cmd();
 
     // THEN
     assert_cmd_snapshot!(cmd, @r"
@@ -203,8 +202,8 @@ fn fails_if_no_source_is_provided() {
 fn fails_if_more_than_one_source_is_provided() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args(["--input-path", "tests/data/input-1.txt", "--use-stdin"]);
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-1.txt", "--use-stdin"]);
 
     // THEN
     assert_cmd_snapshot!(cmd, @r"
@@ -221,8 +220,8 @@ fn fails_if_more_than_one_source_is_provided() {
 fn fails_if_input_file_is_non_existent() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args(["--input-path", "tests/data/nonexistent.txt"]);
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/nonexistent.txt"]);
 
     // THEN
     assert_cmd_snapshot!(cmd, @r"
@@ -239,8 +238,8 @@ fn fails_if_input_file_is_non_existent() {
 fn fails_if_input_file_is_empty() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args(["--input-path", "tests/data/empty.txt"]);
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/empty.txt"]);
 
     // THEN
     assert_cmd_snapshot!(cmd, @r"
@@ -257,8 +256,8 @@ fn fails_if_input_file_is_empty() {
 fn fails_if_ignore_regex_is_incorrect() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args([
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
         "--input-path",
         "tests/data/input-1.txt",
         "--ignore-regex",
@@ -286,8 +285,8 @@ fn fails_if_ignore_regex_is_incorrect() {
 fn fails_if_ignore_first_n_is_not_a_number() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args([
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
         "--input-path",
         "tests/data/input-1.txt",
         "--ignore-first-n",
@@ -311,8 +310,8 @@ fn fails_if_ignore_first_n_is_not_a_number() {
 fn fails_if_ignore_last_n_is_not_a_number() {
     // GIVEN
     // WHEN
-    let mut cmd = base_command();
-    cmd.args([
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
         "--input-path",
         "tests/data/input-1.txt",
         "--ignore-last-n",
