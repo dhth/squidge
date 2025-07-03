@@ -17,3 +17,6 @@ categories = [
 
 [dependencies]
 regex.workspace = true
+
+[dev-dependencies]
+insta.workspace = true

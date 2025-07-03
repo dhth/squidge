@@ -303,6 +303,7 @@ dependencies = [
 name = "squidge"
 version = "0.2.4"
 dependencies = [
+ "insta",
  "regex",
 ]
 
