@@ -19,7 +19,7 @@ exclude = [
 [workspace.dependencies]
 anyhow = "1.0.99"
 insta = { version = "1.43.1", features = [ "yaml" ] }
-regex = "1.11.1"
+regex = "1.11.2"
 squidge = { version = "0.2.4", path = "squidge" }
 
 [profile.dev.package]
